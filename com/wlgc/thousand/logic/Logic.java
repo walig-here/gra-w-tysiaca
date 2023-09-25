@@ -19,6 +19,25 @@ public class Logic {
         return true;
     }
 
+    public Player[] getPlayers(){
+        return players;
+    }
+
+    public GameStage getCurrentStage(){
+        return current_stage;
+    }
+
+    public Integer getBiddingWinnerId(){
+        if(current_stage == GameStage.bid)
+            return leading_player_id;
+        
+        for(int i = 0; i < players.length; i++)
+            if(players[i].getBet() > 0)
+                return i;
+        
+        return null;
+    }
+
     static private Logic instance;
     private GameStage current_stage;
     private final Player[] players;
@@ -29,7 +48,9 @@ public class Logic {
     
     private Logic(){
         players = new Player[3];
-        current_stage = GameStage.deal;
+        for(int i = 0; i < players.length; i++)
+            players[i] = new Player();
+        current_stage = GameStage.bid;
         game_table = Table.getInstance();
     }
 

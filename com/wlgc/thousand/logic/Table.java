@@ -5,7 +5,7 @@ import com.wlgc.thousand.logic.cards.Card;
 public class Table {
     
     private static Table instance;
-    private Card[] cards = new Card[3];
+    private final Card[] cards = new Card[3];
 
     public static Table getInstance(){
         if(instance == null)
