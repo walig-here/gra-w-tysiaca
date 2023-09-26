@@ -11,15 +11,20 @@ public class Game {
         Logic logic = Logic.getInstance();
         UserInterface ui = new ConsoleUI();
         boolean is_running = true;
-        PlayerActions pending_action = null;
 
         while(is_running){
+            // logika gry
             is_running = logic.gameTick();
+
+            // załadowanie danych z logiki do UI
             ui.loadData(logic);
+
+            // wyrenderowanie UI oraz akcje użytkownika
             do {
                 ui.render();
-                pending_action = ui.userAction();
-            } while (pending_action == null);
+                if(logic.getPendingAction().ordinal() < PlayerActions.wait_for_bot_1.ordinal())
+                    logic.setPendingAction(ui.userAction());
+            } while (logic.getPendingAction() == null);
         }
     }
 

@@ -12,6 +12,7 @@ public class ConsoleUI extends UserInterface {
     private final PointsUI pointsUI = new PointsUI();
     private final BiddingUI biddingUI = new BiddingUI();
     private static Scanner input = new Scanner(System.in);
+    private HandUI handUI;
 
     @Override
     protected void renderMainMenu() {
@@ -23,6 +24,7 @@ public class ConsoleUI extends UserInterface {
         System.out.println("\n\n\n\n\n");
         System.out.println("LICYTACJA");
         pointsUI.render();
+        handUI.render();
         biddingUI.render();
     }
 
@@ -34,6 +36,12 @@ public class ConsoleUI extends UserInterface {
     }
 
     @Override
+    protected void renderDealing() {
+        System.out.println("\n\n\n\n\n");
+        System.out.println("ROZDAWANIE");
+    }
+
+    @Override
     protected void renderSummary() {
     }
 
@@ -41,13 +49,14 @@ public class ConsoleUI extends UserInterface {
     public void loadData(Logic logic) {
         setScene(logic.getCurrentStage());
         pointsUI.loadData(logic.getPlayers(), scene);
+        handUI = new HandUI(logic.getUserCards());
         if(scene == Scene.bidding)
             biddingUI.loadData(logic, input);
     }
 
     @Override
     protected PlayerActions actionsMainMenu() {
-        return null;
+        return PlayerActions.next;
     }
 
     @Override
@@ -57,12 +66,12 @@ public class ConsoleUI extends UserInterface {
 
     @Override
     protected PlayerActions actionsGameplay() {
-        return null;
+        return PlayerActions.next;
     }
 
     @Override
     protected PlayerActions actionsSummary() {
-        return null;
+        return PlayerActions.next;
     }
 
 }

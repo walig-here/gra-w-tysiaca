@@ -11,7 +11,11 @@ public class Player {
     private int game_score = 0;             
     private int bet = 0;       
     private final List<Card> cards = new ArrayList<>();       
-    
+
+    public List<Card> getCards(){
+        return cards;
+    }
+
     public int getTurnScore(){
         return turn_score;
     }
@@ -22,6 +26,14 @@ public class Player {
 
     public int getBet(){
         return bet;
+    }
+
+    public void setBet(int bet){
+        this.bet = bet;
+    }
+
+    public void pass(){
+        bet = -1;
     }
 
 }

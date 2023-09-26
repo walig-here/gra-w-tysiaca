@@ -10,7 +10,10 @@ public class PointsUI {
 
     public void loadData(Player[] players, Scene current_scene){
         for(int i = 0; i < players.length; i++){
-            player_data[i] = "Gracz " + i + "\t\t";
+            if(i == 0)
+                player_data[i] = "Ty\t\t";
+            else
+                player_data[i] = "Gracz " + i + "\t\t";
             switch(current_scene){
                 case bidding: loadBiddingData(players[i], i); break;
                 case main_gameplay: loadMainGameData(players[i], i); break;

@@ -10,16 +10,18 @@ public abstract class UserInterface {
 
     protected void setScene(GameStage stage){
         switch(stage){
-            case deal: scene = Scene.bidding; break;
+            case deal: scene = Scene.dealing; break;
             case bid: scene = Scene.bidding; break;
             case play: scene = Scene.main_gameplay; break;
             case summarize: scene = Scene.summary; break;
+            default: break;
         }
     }
 
     public void render(){
         switch(scene){
             case main_menu: renderMainMenu(); break;
+            case dealing: renderDealing(); break;
             case bidding: renderBidding(); break;
             case main_gameplay: renderMainGameplay(); break;
             case summary: renderSummary(); break;
@@ -29,6 +31,7 @@ public abstract class UserInterface {
     public PlayerActions userAction(){
         switch(scene){
             case main_menu: return actionsMainMenu();
+            case dealing: return PlayerActions.wait_for_bot_1;
             case bidding: return actionsBidding();
             case main_gameplay: return actionsGameplay();
             case summary: return actionsSummary();
@@ -45,6 +48,8 @@ public abstract class UserInterface {
     protected abstract PlayerActions actionsSummary();
 
     protected abstract void renderMainMenu();
+
+    protected abstract void renderDealing();
 
     protected abstract void renderBidding();
 
