@@ -35,7 +35,14 @@ public class Card {
                 pack.add(new Card(Color.values()[color], Figure.values()[figure]));
     }
 
-    private Card(Color color, Figure figure){
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof Card))
+            return false;
+        return ((Card)o).color.ordinal() == this.color.ordinal() && ((Card)o).figure.ordinal() == this.figure.ordinal();
+    }
+
+    public Card(Color color, Figure figure){
         this.color = color;
         this.figure = figure;
     }

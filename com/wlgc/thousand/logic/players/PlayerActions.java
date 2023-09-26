@@ -15,6 +15,10 @@ public enum PlayerActions {
     lay_card_7,
     lay_card_8,
     lay_card_9,
+    report_40,
+    report_60,
+    report_80,
+    report_100,
     wait_for_bot_1,
     wait_for_bot_2
 }

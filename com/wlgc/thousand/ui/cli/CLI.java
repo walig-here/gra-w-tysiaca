@@ -12,6 +12,7 @@ public class CLI extends UserInterface {
     private final BiddingUI biddingUI = new BiddingUI();
     private final HandUI handUI = new HandUI();
     private final TableUI tableUI = new TableUI();
+    private final MainGameUI mainGameUI = new MainGameUI();
     private final PreparationUI preparationUI = new PreparationUI();
     private static Scanner input_stream = new Scanner(System.in);
     private static CLI instance;
@@ -29,7 +30,8 @@ public class CLI extends UserInterface {
 
     @Override
     protected void renderBidding() {
-        System.out.println("\n\n\n\n\n");
+        for(int i = 0; i < 100; i++)
+            System.out.println();
         System.out.println("LICYTACJA");
         pointsUI.render();
         tableUI.render();
@@ -39,7 +41,8 @@ public class CLI extends UserInterface {
 
     @Override
     protected void renderPreparation() {
-        System.out.println("\n\n\n\n\n");
+        for(int i = 0; i < 100; i++)
+            System.out.println();
         System.out.println("PRZYGOTOWANIA");
         pointsUI.render();
         tableUI.render();
@@ -49,37 +52,50 @@ public class CLI extends UserInterface {
 
     @Override
     protected void renderMainGameplay() {
-        System.out.println("\n\n\n\n\n");
+        for(int i = 0; i < 100; i++)
+            System.out.println();
         System.out.println("ROZGRYWKA");
         pointsUI.render();
+        tableUI.render();
         handUI.render();
+        mainGameUI.render();
     }
 
     @Override
     protected void renderDealing() {
-        System.out.println("\n\n\n\n\n");
+        for(int i = 0; i < 100; i++)
+            System.out.println();
         System.out.println("ROZDAWANIE");
     }
 
     @Override
     protected void renderSummary() {
+        for(int i = 0; i < 100; i++)
+            System.out.println();
+        System.out.println("PODSUMOWANIE");
+        pointsUI.render();
     }
 
     @Override
     public void loadData(Logic logic) {
         setScene(logic.getCurrentStage());
         pointsUI.loadData(logic.getPlayers(), scene);
-        handUI.loadData(logic.getUserCards());
 
         switch(scene){
             case bidding:
                 biddingUI.loadData(logic, input_stream);
                 tableUI.loadData(logic, scene);
+                handUI.loadData(logic.getUserCards());
                 break;
             case preparations:
                 tableUI.loadData(logic, scene);
                 preparationUI.loadData(logic, input_stream);
+                handUI.loadData(logic.getUserCards());
                 break;
+            case main_gameplay:
+                tableUI.loadData(logic, scene);
+                mainGameUI.loadData(logic, input_stream);
+                handUI.loadData(logic.getUserCards());
             default: 
                 break;
         }
@@ -97,7 +113,7 @@ public class CLI extends UserInterface {
 
     @Override
     protected PlayerActions actionsGameplay() {
-        return PlayerActions.next;
+        return mainGameUI.userAction();
     }
 
     @Override

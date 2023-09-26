@@ -10,6 +10,16 @@ import com.wlgc.thousand.logic.players.PlayerID;
 import com.wlgc.thousand.logic.stages.GameStage;
 
 public class Logic {
+
+    static private Logic instance;
+    private GameStage current_stage;
+    private final Player[] players;
+    private PlayerID dealer_id;
+    private PlayerID leading_player_id; 
+    private PlayerID current_player_id; 
+    private final Table game_table;
+    private PlayerActions pending_action;
+
     public static Logic getInstance() {
         if(instance == null)
             instance = new Logic();
@@ -26,6 +36,14 @@ public class Logic {
             case summarize: return summarizeDeal();
         }
         return true;
+    }
+
+    public PlayerID getLeadingPlayerID(){
+        return leading_player_id;
+    }
+
+    public Table getTable(){
+        return game_table;
     }
 
     public Player getPlayer(){
@@ -55,6 +73,10 @@ public class Logic {
         return null;
     }
 
+    public PlayerID getCurrentPlayerID(){
+        return current_player_id;
+    }
+
     public PlayerActions getPendingAction(){
         return pending_action;
     }
@@ -66,15 +88,6 @@ public class Logic {
     public List<Card> getUserCards(){
         return players[0].getCards();
     }
-
-    static private Logic instance;
-    private GameStage current_stage;
-    private final Player[] players;
-    private PlayerID dealer_id;
-    private PlayerID leading_player_id; 
-    private PlayerID current_player_id; 
-    private final Table game_table;
-    private PlayerActions pending_action;
     
     private Logic(){
         players = new Player[3];
@@ -94,6 +107,9 @@ public class Logic {
 
 
     private void deal(){
+        // "sprzątnięcie" stołu
+        game_table.setActiveReport(null);
+
         // wyłonienie rozdającego
         dealer_id.setToNextPlayerId();
 
@@ -243,10 +259,82 @@ public class Logic {
 
     private void gameTurn(){
         
+        // o ile wszyscy się wyłożyli następuje rozstrzygnięcie
+        if(game_table.allPlayersHaveLayedCards()){
+            leading_player_id = game_table.clinch(leading_player_id);
+            players[leading_player_id.toInt()].gatherPoints(game_table);
+            current_player_id.set(leading_player_id.toInt());
+            return;
+        }
+
+        // SI wybiera akcję
+        if(current_player_id.isAI()){
+            List<PlayerActions> permitted_actions = players[current_player_id.toInt()].getPermittedActions(game_table, leading_player_id, current_player_id);
+            Random rng = new Random(System.currentTimeMillis());
+            if(permitted_actions.size() > 1)
+                pending_action = permitted_actions.get(rng.nextInt(permitted_actions.size()-1));
+            else
+                pending_action = permitted_actions.get(0);
+        }
+
+        // wykonanie akcji
+        switch(pending_action){
+            case lay_card_0:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 0);
+                break;
+            case lay_card_1:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 1);
+                break;
+            case lay_card_2:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 2);
+                break;
+            case lay_card_3:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 3);
+                break;
+            case lay_card_4:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 4);
+                break;
+            case lay_card_5:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 5);
+                break;
+            case lay_card_6:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 6);
+                break;
+            case lay_card_7:
+                players[current_player_id.toInt()].layCard(game_table, current_player_id, 7);
+                break;
+            case report_40:
+                players[current_player_id.toInt()].report(game_table, current_player_id, pending_action);
+                break;
+            case report_60:
+                players[current_player_id.toInt()].report(game_table, current_player_id, pending_action);
+                break;
+            case report_80:
+                players[current_player_id.toInt()].report(game_table, current_player_id, pending_action);
+                break;
+            case report_100:
+                players[current_player_id.toInt()].report(game_table, current_player_id, pending_action);
+                break;
+            default:
+                break;
+        }
+
+        // wykłada się kolejny gracz
+        current_player_id.setToNextPlayerId();
+
+        // jeżeli gracz nie majuż kart na ręce, to zakończ rozdanie
+        if(players[current_player_id.toInt()].getCards().isEmpty())
+            current_stage = GameStage.summarize;
     }
 
     private boolean summarizeDeal(){
-        return false;
+        for (Player player : players){
+            player.summarizeTurn();
+            if(player.hasWonTheGame())
+                return false;
+        }
+        current_stage = GameStage.deal;
+        return true;
     }
 
     private void overtrump(PlayerID overtrumper_id){

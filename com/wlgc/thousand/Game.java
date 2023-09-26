@@ -1,7 +1,6 @@
 package com.wlgc.thousand;
 
 import com.wlgc.thousand.logic.Logic;
-import com.wlgc.thousand.logic.players.PlayerActions;
 import com.wlgc.thousand.ui.UserInterface;
 import com.wlgc.thousand.ui.cli.CLI;
 
