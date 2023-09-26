@@ -6,11 +6,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    
-    private int turn_score = 0;        
-    private int game_score = 0;             
+
+    //---------------------------------------------------------------------------------
+    /* ### POLA ### */
+
+    private int turn_score;        
+    private int game_score;             
     private int bet = 0;       
-    private final List<Card> cards = new ArrayList<>();       
+    private final List<Card> cards;      
+
+    //---------------------------------------------------------------------------------
+    /* ## METODY ### */
+
+    public Player(){
+        turn_score = 0;
+        game_score = 0;
+        bet = 0;
+        cards = new ArrayList<>();  
+    }
 
     public List<Card> getCards(){
         return cards;
@@ -35,5 +48,7 @@ public class Player {
     public void pass(){
         bet = -1;
     }
+
+    //---------------------------------------------------------------------------------
 
 }

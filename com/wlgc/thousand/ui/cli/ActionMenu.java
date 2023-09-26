@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.wlgc.thousand.logic.PlayerActions;
+import com.wlgc.thousand.logic.players.PlayerActions;
 
 public class ActionMenu {
     

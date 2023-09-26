@@ -1,8 +1,8 @@
 package com.wlgc.thousand.ui;
 
-import com.wlgc.thousand.logic.GameStage;
 import com.wlgc.thousand.logic.Logic;
-import com.wlgc.thousand.logic.PlayerActions;
+import com.wlgc.thousand.logic.players.PlayerActions;
+import com.wlgc.thousand.logic.stages.GameStage;
 
 public abstract class UserInterface {
 

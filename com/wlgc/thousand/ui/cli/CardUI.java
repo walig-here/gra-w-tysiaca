@@ -21,6 +21,7 @@ public class CardUI {
             case jack: card_string += "J"; break;
             case queen: card_string += "Q"; break;
             case king: card_string += "K"; break;
+            case ten: card_string += "10"; break;
             case ace: card_string += "A"; break;
         }
         card_string += "]";

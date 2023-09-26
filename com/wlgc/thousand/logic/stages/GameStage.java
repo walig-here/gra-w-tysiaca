@@ -1,4 +1,4 @@
-package com.wlgc.thousand.logic;
+package com.wlgc.thousand.logic.stages;
 
 public enum GameStage {
     init,

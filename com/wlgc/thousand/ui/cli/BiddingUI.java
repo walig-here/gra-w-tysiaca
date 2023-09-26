@@ -3,7 +3,7 @@ package com.wlgc.thousand.ui.cli;
 import java.util.Scanner;
 
 import com.wlgc.thousand.logic.Logic;
-import com.wlgc.thousand.logic.PlayerActions;
+import com.wlgc.thousand.logic.players.PlayerActions;
 
 public class BiddingUI {
     
@@ -34,7 +34,7 @@ public class BiddingUI {
             else
                 player_data[i] += "Zakład:" + bet + "\t\t";
 
-            if(i == logic.getBiddingWinnerId())
+            if(i == logic.getBiddingWinnerId().toInt())
                 player_data[i] += "LIDER";
         }
         

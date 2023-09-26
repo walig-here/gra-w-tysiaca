@@ -10,7 +10,9 @@ public class HandUI {
     private final String header = "Ręka:";
     private final List<CardUI> cards = new ArrayList<>();
 
-    public HandUI(List<Card> cards_data){
+    public void loadData(List<Card> cards_data){
+        if(!cards.isEmpty())
+            cards.clear();
         for(Card card : cards_data)
             cards.add(new CardUI(card.color, card.figure));
     }

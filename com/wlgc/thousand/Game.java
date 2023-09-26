@@ -1,31 +1,58 @@
 package com.wlgc.thousand;
 
 import com.wlgc.thousand.logic.Logic;
-import com.wlgc.thousand.logic.PlayerActions;
+import com.wlgc.thousand.logic.players.PlayerActions;
 import com.wlgc.thousand.ui.UserInterface;
-import com.wlgc.thousand.ui.cli.ConsoleUI;
+import com.wlgc.thousand.ui.cli.CLI;
 
 public class Game {
     
     public static void main(String[] args) {
-        Logic logic = Logic.getInstance();
-        UserInterface ui = new ConsoleUI();
-        boolean is_running = true;
+        Game game = Game.getInstance();
+        game.run();
+    }
 
+    private Logic logic;
+    private UserInterface ui;
+    private static Game instance;
+
+    public void run(){
+        gameplayLoop();
+    }
+
+    private Game(){
+        logic = Logic.getInstance();
+        ui = CLI.getInstance();
+    }
+
+    private void gameplayLoop(){
+        boolean is_running = true;
         while(is_running){
             // logika gry
             is_running = logic.gameTick();
 
-            // załadowanie danych z logiki do UI
+            // wyrenderowanie zaktualizowanego UI oraz oczekiwanie na akcje użytkownika
             ui.loadData(logic);
-
-            // wyrenderowanie UI oraz akcje użytkownika
             do {
                 ui.render();
-                if(logic.getPendingAction().ordinal() < PlayerActions.wait_for_bot_1.ordinal())
+                if(logic.getPendingAction() == null || logic.getPendingAction().ordinal() < PlayerActions.wait_for_bot_1.ordinal()){
                     logic.setPendingAction(ui.userAction());
+                }
+                else {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }  
             } while (logic.getPendingAction() == null);
         }
+    }
+
+    public static Game getInstance(){
+        if(instance == null)
+            instance = new Game();
+        return instance;
     }
 
 }

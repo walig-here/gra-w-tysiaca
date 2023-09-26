@@ -1,6 +1,7 @@
 package com.wlgc.thousand.logic;
 
 import com.wlgc.thousand.logic.cards.Card;
+import com.wlgc.thousand.logic.players.PlayerID;
 
 public class Table {
     
@@ -19,8 +20,8 @@ public class Table {
     } 
 
     // wyłożenie karty na stół
-    public void putCard(int player_id){
-        
+    public void putCard(PlayerID player_id, Card card){
+        cards[player_id.toInt()] = card;
     }
 
 }

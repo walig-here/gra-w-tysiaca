@@ -3,16 +3,23 @@ package com.wlgc.thousand.ui.cli;
 import java.util.Scanner;
 
 import com.wlgc.thousand.logic.Logic;
-import com.wlgc.thousand.logic.PlayerActions;
+import com.wlgc.thousand.logic.players.PlayerActions;
 import com.wlgc.thousand.ui.Scene;
 import com.wlgc.thousand.ui.UserInterface;
 
-public class ConsoleUI extends UserInterface {
+public class CLI extends UserInterface {
 
     private final PointsUI pointsUI = new PointsUI();
     private final BiddingUI biddingUI = new BiddingUI();
-    private static Scanner input = new Scanner(System.in);
-    private HandUI handUI;
+    private final HandUI handUI = new HandUI();
+    private static Scanner input_stream = new Scanner(System.in);
+    private static CLI instance;
+
+    public static CLI getInstance(){
+        if(instance == null)
+            instance = new CLI();
+        return instance;
+    }
 
     @Override
     protected void renderMainMenu() {
@@ -33,6 +40,7 @@ public class ConsoleUI extends UserInterface {
         System.out.println("\n\n\n\n\n");
         System.out.println("ROZGRYWKA");
         pointsUI.render();
+        handUI.render();
     }
 
     @Override
@@ -49,9 +57,9 @@ public class ConsoleUI extends UserInterface {
     public void loadData(Logic logic) {
         setScene(logic.getCurrentStage());
         pointsUI.loadData(logic.getPlayers(), scene);
-        handUI = new HandUI(logic.getUserCards());
+        handUI.loadData(logic.getUserCards());
         if(scene == Scene.bidding)
-            biddingUI.loadData(logic, input);
+            biddingUI.loadData(logic, input_stream);
     }
 
     @Override
@@ -72,6 +80,10 @@ public class ConsoleUI extends UserInterface {
     @Override
     protected PlayerActions actionsSummary() {
         return PlayerActions.next;
+    }
+
+    private CLI(){
+        
     }
 
 }
