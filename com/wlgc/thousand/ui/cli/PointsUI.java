@@ -15,10 +15,20 @@ public class PointsUI {
             else
                 player_data[i] = "Gracz " + i + "\t\t";
             switch(current_scene){
-                case bidding: loadBiddingData(players[i], i); break;
-                case main_gameplay: loadMainGameData(players[i], i); break;
-                case summary: loadSummaryData(players[i], i);
-                default: break;
+                case bidding: 
+                    loadBiddingData(players[i], i); 
+                    break;
+                case preparations: 
+                    loadMainGameData(players[i], i);
+                    break;
+                case main_gameplay: 
+                    loadMainGameData(players[i], i); 
+                    break;
+                case summary: 
+                    loadSummaryData(players[i], i);
+                    break;
+                default: 
+                    break;
             }
         }
     }
@@ -35,7 +45,10 @@ public class PointsUI {
     }
 
     private void loadMainGameData(Player player, int player_id){
-        player_data[player_id] += "Tura: " + player.getTurnScore() + "/" + player.getBet() + "\t\t";
+        if(player.getBet() > 0)
+            player_data[player_id] += "Tura: " + player.getTurnScore() + "/" + player.getBet() + "\t\t";
+        else
+            player_data[player_id] += "Tura: " + player.getTurnScore() + "  \t\t";
         player_data[player_id] += "Wynik: " + player.getGameScore();
     }
 

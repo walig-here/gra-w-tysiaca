@@ -20,8 +20,10 @@ public class HandUI {
     public void render(){
         System.out.println("-------------");
         System.out.println(header);
-        for(CardUI card : cards)
-            card.render();
+        for(int i = 0; i < cards.size(); i++){
+            System.out.printf("(%d)",i);
+            cards.get(i).render();
+        }
         System.out.println();
     }
 

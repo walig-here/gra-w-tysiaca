@@ -21,10 +21,19 @@ public class Logic {
             case init: current_stage = GameStage.deal; return true;
             case deal: deal(); return true;
             case bid: bidTurn(); return true;
+            case prepare: preparationTurn(); return true;
             case play: gameTurn(); return true;
             case summarize: return summarizeDeal();
         }
         return true;
+    }
+
+    public Player getPlayer(){
+        return players[0];
+    }
+
+    public Card[] getCardsFromTable(){
+        return game_table.getCards();
     }
 
     public Player[] getPlayers(){
@@ -40,7 +49,7 @@ public class Logic {
             return leading_player_id;
         
         for(int i = 0; i < players.length; i++)
-            if(players[i].getBet() >= 0)
+            if(players[i].getBet() > 0)
                 return new PlayerID(i);
         
         return null;
@@ -112,9 +121,14 @@ public class Logic {
         // akcje gracza
         if(!current_player_id.isAI()){
             switch(pending_action){
-                case pass: players[current_player_id.toInt()].pass(); break;
-                case overtrump: overtrump(current_player_id); break;
-                default: break;
+                case pass: 
+                    players[current_player_id.toInt()].pass(); 
+                    break;
+                case overtrump: 
+                    overtrump(current_player_id); 
+                    break;
+                default: 
+                    break;
             }
 
             // kolejną turę nalezy przeczekać bezczynnie
@@ -138,17 +152,93 @@ public class Logic {
         current_player_id.setToNextPlayerId();;
 
         // gracz, który po przejściu całej kolejki pozostał liderem, zwycięża licytację
-        if(current_player_id == leading_player_id){
+        if(current_player_id.toInt() == leading_player_id.toInt()){
             for (Player player : players)
                 if(player.getBet() < 0)
                     player.setBet(0);
-            current_stage = GameStage.play;
+            current_stage = GameStage.prepare;
         }
     } 
 
-    private void overtrump(PlayerID player_id){
-        players[player_id.toInt()].setBet(players[leading_player_id.toInt()].getBet()+10);
-        leading_player_id.set(player_id.toInt());
+    private void preparationTurn(){
+
+        // akcje sztucznej inteligencji
+        if(current_player_id.isAI()){
+            if(players[current_player_id.toInt()].getCards().size() > 9){
+                Random rng = new Random(System.currentTimeMillis());
+                players[current_player_id.toInt()].giveCardToPlayer(
+                    players[current_player_id.getNextPlayerID().toInt()], 
+                    rng.nextInt(players[current_player_id.toInt()].getCards().size())
+                );
+            }
+            else if(players[current_player_id.toInt()].getCards().size() > 8){
+                Random rng = new Random(System.currentTimeMillis());
+                players[current_player_id.toInt()].giveCardToPlayer(
+                    players[current_player_id.getNextPlayerID().getNextPlayerID().toInt()], 
+                    rng.nextInt(players[current_player_id.toInt()].getCards().size())
+                );
+            }
+            else if(game_table.getCards()[0] != null){
+                players[current_player_id.toInt()].takeCards(game_table);
+            }
+            else{
+                Random rng = new Random(System.currentTimeMillis());
+                if(rng.nextInt(100) < 50)
+                    current_stage = GameStage.play;
+                else
+                    overtrump(current_player_id);
+            }
+
+            if(current_player_id.toInt() == 1)
+                pending_action = PlayerActions.wait_for_bot_1;
+            else
+                pending_action = PlayerActions.wait_for_bot_2;
+        }
+        // akcje gracza
+        else{
+            switch(pending_action){
+                case take_cards: 
+                    getPlayer().takeCards(game_table);
+                    break;
+                case lay_card_0:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 0);
+                    break;
+                case lay_card_1:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 1);
+                case lay_card_2:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 2);
+                    break;
+                case lay_card_3:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 3);
+                    break;
+                case lay_card_4:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 4);
+                    break;
+                case lay_card_5:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 5);
+                    break;
+                case lay_card_6:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 6);
+                    break;
+                case lay_card_7:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 7);
+                    break;
+                case lay_card_8:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 9 ? players[1] : players[2], 8);
+                    break;
+                case lay_card_9:
+                    getPlayer().giveCardToPlayer(getPlayer().getCards().size() > 8 ? players[1] : players[2], 9);
+                    break;
+                case overtrump:
+                    overtrump(current_player_id);
+                    break;
+                case pass:
+                    current_stage = GameStage.play;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void gameTurn(){
@@ -157,5 +247,10 @@ public class Logic {
 
     private boolean summarizeDeal(){
         return false;
+    }
+
+    private void overtrump(PlayerID overtrumper_id){
+        players[overtrumper_id.toInt()].setBet(players[leading_player_id.toInt()].getBet()+10);
+        leading_player_id.set(overtrumper_id.toInt());
     }
 }

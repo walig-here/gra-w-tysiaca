@@ -4,6 +4,7 @@ public enum GameStage {
     init,
     deal,
     bid,
+    prepare,
     play,
     summarize
 }

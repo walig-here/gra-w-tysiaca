@@ -1,5 +1,6 @@
 package com.wlgc.thousand.logic.players;
 
+import com.wlgc.thousand.logic.Table;
 import com.wlgc.thousand.logic.cards.Card;
 
 import java.util.ArrayList;
@@ -47,6 +48,21 @@ public class Player {
 
     public void pass(){
         bet = -1;
+    }
+
+    public void takeCards(Table game_table){
+        for(int i = 0; i < game_table.getCards().length; i++){
+            cards.add(game_table.getCards()[i]);
+            game_table.getCards()[i] = null;
+        }
+    }
+
+    public void layCard(Table game_table, PlayerID player_id, int card_index){
+        game_table.putCard(player_id, cards.remove(card_index));
+    }
+
+    public void giveCardToPlayer(Player receiver, int card_index){
+        receiver.cards.add(cards.remove(card_index));
     }
 
     //---------------------------------------------------------------------------------

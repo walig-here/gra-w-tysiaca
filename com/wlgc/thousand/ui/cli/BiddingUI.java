@@ -40,10 +40,12 @@ public class BiddingUI {
         
         if(logic.getPendingAction() == PlayerActions.wait_for_bot_1){
             menu = new ActionMenu("Licytuje Gracz 1", scanner);
+            menu.appendOption(PlayerActions.next, "Dalej");
             return;
         }
         else if(logic.getPendingAction() == PlayerActions.wait_for_bot_2){
             menu = new ActionMenu("Licytuje Gracz 2", scanner);
+            menu.appendOption(PlayerActions.next, "Dalej");
             return;
         }
 

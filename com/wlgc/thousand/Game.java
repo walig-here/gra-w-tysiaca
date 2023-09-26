@@ -35,16 +35,7 @@ public class Game {
             ui.loadData(logic);
             do {
                 ui.render();
-                if(logic.getPendingAction() == null || logic.getPendingAction().ordinal() < PlayerActions.wait_for_bot_1.ordinal()){
-                    logic.setPendingAction(ui.userAction());
-                }
-                else {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }  
+                logic.setPendingAction(ui.userAction());
             } while (logic.getPendingAction() == null);
         }
     }

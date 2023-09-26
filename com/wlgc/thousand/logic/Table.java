@@ -14,6 +14,10 @@ public class Table {
         return instance;
     }
 
+    public Card[] getCards(){
+        return cards;
+    }
+
     // wyłonienie zwycięzcy
     public int clinch(){
         return 0;

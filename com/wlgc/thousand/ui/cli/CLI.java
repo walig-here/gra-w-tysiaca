@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import com.wlgc.thousand.logic.Logic;
 import com.wlgc.thousand.logic.players.PlayerActions;
-import com.wlgc.thousand.ui.Scene;
 import com.wlgc.thousand.ui.UserInterface;
 
 public class CLI extends UserInterface {
@@ -12,6 +11,8 @@ public class CLI extends UserInterface {
     private final PointsUI pointsUI = new PointsUI();
     private final BiddingUI biddingUI = new BiddingUI();
     private final HandUI handUI = new HandUI();
+    private final TableUI tableUI = new TableUI();
+    private final PreparationUI preparationUI = new PreparationUI();
     private static Scanner input_stream = new Scanner(System.in);
     private static CLI instance;
 
@@ -31,8 +32,19 @@ public class CLI extends UserInterface {
         System.out.println("\n\n\n\n\n");
         System.out.println("LICYTACJA");
         pointsUI.render();
+        tableUI.render();
         handUI.render();
         biddingUI.render();
+    }
+
+    @Override
+    protected void renderPreparation() {
+        System.out.println("\n\n\n\n\n");
+        System.out.println("PRZYGOTOWANIA");
+        pointsUI.render();
+        tableUI.render();
+        handUI.render();
+        preparationUI.render();
     }
 
     @Override
@@ -58,8 +70,19 @@ public class CLI extends UserInterface {
         setScene(logic.getCurrentStage());
         pointsUI.loadData(logic.getPlayers(), scene);
         handUI.loadData(logic.getUserCards());
-        if(scene == Scene.bidding)
-            biddingUI.loadData(logic, input_stream);
+
+        switch(scene){
+            case bidding:
+                biddingUI.loadData(logic, input_stream);
+                tableUI.loadData(logic, scene);
+                break;
+            case preparations:
+                tableUI.loadData(logic, scene);
+                preparationUI.loadData(logic, input_stream);
+                break;
+            default: 
+                break;
+        }
     }
 
     @Override
@@ -80,6 +103,11 @@ public class CLI extends UserInterface {
     @Override
     protected PlayerActions actionsSummary() {
         return PlayerActions.next;
+    }
+
+    @Override
+    protected PlayerActions actionPreparation() {
+        return preparationUI.userAction();
     }
 
     private CLI(){

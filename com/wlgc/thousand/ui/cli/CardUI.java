@@ -8,6 +8,12 @@ public class CardUI {
     private String card_string;
 
     public CardUI(Color color, Figure figure){
+
+        if(color == null && figure == null){
+            card_string = "[? ?]";
+            return;
+        }
+
         card_string = "[";
         switch(color){
             case spades: card_string += "w"; break;
